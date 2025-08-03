@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive CV - Hamza Shahzad</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Slate Gray & Sky Blue -->
+    <!-- Application Structure Plan: The SPA is designed as a top-down narrative journey for a recruiter. It starts with a strong Hero section for immediate impact. This is followed by an 'About Me' to add personal context. The core of the application is the 'Interactive Skills Dashboard' and 'Career Timeline'. The dashboard allows users to filter skills, making a large amount of information digestible and demonstrating technical breadth. The timeline visually represents career progression, with interactive toggles to reveal details without overwhelming the user. A 'Spotlight' section highlights key achievements (Hackathon) and qualifications, making them stand out. This structure guides the user from a high-level summary to detailed, explorable content, which is more engaging and user-friendly than a static document. -->
+    <!-- Visualization & Content Choices: 
+        - Professional Summary -> Inform -> Static Text Block -> N/A -> Provides immediate context.
+        - Core Skills -> Organize/Compare -> Interactive Filterable Grid & Bar Chart -> User clicks category buttons to filter skills; chart provides a visual summary -> This makes the dense skill list easy to navigate and visually compares skill set distribution -> Vanilla JS for filtering, Chart.js for the bar chart.
+        - Professional Experience -> Change -> Interactive Vertical Timeline -> User clicks on a job title to expand/collapse details -> Shows career progression clearly and keeps the UI clean by hiding details by default -> Vanilla JS for toggle interaction.
+        - Achievements/Education -> Inform -> Styled Cards -> N/A -> Gives prominence to key qualifications and accomplishments -> HTML/Tailwind CSS.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -30px;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #38bdf8;
+            border: 4px solid #f0f9ff;
+        }
+        .timeline-line {
+            position: absolute;
+            left: -21px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: #e0f2fe;
+        }
+        .skill-card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .skill-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .nav-link {
+            transition: color 0.2s;
+        }
+        .nav-link:hover {
+            color: #38bdf8;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold text-slate-800">Hamza Shahzad</div>
+            <div class="hidden md:flex space-x-8">
+                <a href="#about" class="nav-link text-slate-600">About</a>
+                <a href="#skills" class="nav-link text-slate-600">Skills</a>
+                <a href="#experience" class="nav-link text-slate-600">Experience</a>
+                <a href="#spotlight" class="nav-link text-slate-600">Spotlight</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+
+        <section id="hero" class="text-center py-16">
+            <h1 class="text-5xl md:text-6xl font-extrabold text-slate-900">Hamza Shahzad</h1>
+            <p class="mt-4 text-xl text-slate-500">Google Certified IT Professional | System Administrator | Tech-Savvy</p>
+            <div class="mt-8 flex justify-center space-x-4">
+                <a href="mailto:myself.hamza.shahzad@gmail.com" class="bg-sky-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-sky-600 transition">Contact Me</a>
+                <a href="https://linkedin.com/in/myselfhamza1999" target="_blank" class="bg-white text-slate-700 font-bold py-3 px-6 rounded-lg border border-slate-300 hover:bg-slate-50 transition">LinkedIn</a>
+            </div>
+        </section>
+
+        <section id="about" class="py-16">
+            <div class="max-w-3xl mx-auto bg-white p-8 rounded-xl shadow-lg">
+                <h2 class="text-3xl font-bold text-center mb-6 text-slate-800">About Me</h2>
+                <p class="text-lg text-slate-600 leading-relaxed">
+                    A highly motivated and results-driven IT Professional with over five years of hands-on experience in system administration, IT support, and infrastructure management. As a proactive self-learner, I hold a Google IT Support Specialization and am adept at troubleshooting complex issues while implementing robust IT solutions. My expertise in system administration, virtualization, and scripting enables me to streamline operations and enhance organizational productivity. I am passionate about leveraging new technologies to drive efficiency and innovation, constantly seeking opportunities to expand my skills and contribute to a dynamic team.
+                </p>
+            </div>
+        </section>
+
+        <section id="skills" class="py-16 bg-slate-50 rounded-xl">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-slate-800">Skills Dashboard</h2>
+                <p class="mt-2 text-slate-500">Filter by category to explore my technical skills.</p>
+            </div>
+
+            <div class="flex justify-center flex-wrap gap-2 mb-8 px-4">
+                <button onclick="filterSkills('all')" class="skill-filter-btn bg-sky-500 text-white py-2 px-4 rounded-full font-semibold">All</button>
+                <button onclick="filterSkills('technical')" class="skill-filter-btn bg-white text-slate-700 py-2 px-4 rounded-full font-semibold border border-slate-200">Technical Expertise</button>
+                <button onclick="filterSkills('scripting')" class="skill-filter-btn bg-white text-slate-700 py-2 px-4 rounded-full font-semibold border border-slate-200">Scripting & Automation</button>
+                <button onclick="filterSkills('virtualization')" class="skill-filter-btn bg-white text-slate-700 py-2 px-4 rounded-full font-semibold border border-slate-200">Virtualization & Servers</button>
+                <button onclick="filterSkills('cloud')" class="skill-filter-btn bg-white text-slate-700 py-2 px-4 rounded-full font-semibold border border-slate-200">Cloud Platforms</button>
+            </div>
+
+            <div id="skills-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 px-4">
+            </div>
+            
+            <div class="mt-16">
+                 <h3 class="text-2xl font-bold text-center mb-6 text-slate-800">Skill Distribution</h3>
+                 <div class="chart-container">
+                    <canvas id="skillsChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="experience" class="py-20">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-slate-800">Career Timeline</h2>
+                <p class="mt-2 text-slate-500">A journey of growth and impact.</p>
+            </div>
+            <div id="timeline-container" class="relative max-w-2xl mx-auto">
+                <div class="timeline-line"></div>
+            </div>
+        </section>
+
+        <section id="spotlight" class="py-16 bg-slate-50 rounded-xl">
+             <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-slate-800">Spotlight</h2>
+                <p class="mt-2 text-slate-500">Key achievements and qualifications.</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <div class="bg-white p-8 rounded-xl shadow-lg">
+                     <h3 class="text-2xl font-bold text-slate-800 mb-4">🏆 Winner - Pakistan's First Cybersecurity Hackathon</h3>
+                     <p class="text-slate-600">Successfully competed against 52 teams in the Karachi Region, demonstrating expertise in Network Attacks & Exploitation. This achievement highlights my passion for cybersecurity and my ability to perform under pressure.</p>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-lg">
+                    <h3 class="text-2xl font-bold text-slate-800 mb-4">🎓 Education & Certifications</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <p class="font-bold text-slate-700">Bachelor of Science in Computer Science (Expected 2025)</p>
+                            <p class="text-slate-500">Virtual University of Pakistan - Hyderabad, Sindh, Pakistan</p>
+                        </div>
+                        <div>
+                            <p class="font-bold text-slate-700">Google IT Support Specialization</p>
+                            <p class="text-slate-500">Coursera/Google - 2021</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-slate-800 text-white text-center py-8">
+        <p>&copy; 2025 Hamza Shahzad. All Rights Reserved.</p>
+        <p class="text-slate-400 mt-2">Built to showcase skills and experience.</p>
+    </footer>
+
+    <script>
+        const skillsData = [
+            { name: 'System Administration', category: 'technical' },
+            { name: 'Network Administration', category: 'technical' },
+            { name: 'IT Infrastructure', category: 'technical' },
+            { name: 'IT Support', category: 'technical' },
+            { name: 'Firewall Management', category: 'technical' },
+            { name: 'VPN Implementation', category: 'technical' },
+            { name: 'IT Consulting', category: 'technical' },
+            { name: 'Cloud Services', category: 'technical' },
+            { name: 'POS Systems', category: 'technical' },
+            { name: 'IP Phones', category: 'technical' },
+            { name: 'ERP Server Management', category: 'technical' },
+            { name: 'CCTV Management', category: 'technical' },
+            { name: 'Backup Solutions (Veeam)', category: 'technical' },
+            { name: 'IT Monitoring (Nagios, PRTG, Zabbix)', category: 'technical' },
+            { name: 'Microsoft Entra ID', category: 'technical' },
+            { name: 'Microsoft Exchange', category: 'technical' },
+            { name: 'SSO/SAML/IdP Configs', category: 'technical' },
+            { name: 'PowerShell', category: 'scripting' },
+            { name: 'Bash', category: 'scripting' },
+            { name: 'Python', category: 'scripting' },
+            { name: 'VMware & vSphere', category: 'virtualization' },
+            { name: 'Hyper-V', category: 'virtualization' },
+            { name: 'Proxmox & VirtualBox', category: 'virtualization' },
+            { name: 'AWS', category: 'cloud' },
+            { name: 'Google Cloud Platform', category: 'cloud' },
+            { name: 'Microsoft Azure', category: 'cloud' },
+        ];
+
+        const experienceData = [
+            {
+                role: 'System Administrator',
+                company: 'TWC Intl',
+                period: 'Apr 2025 - Present',
+                details: [
+                    'Configure and maintain systems, firewalls, and monitoring tools alongside RMM platforms.',
+                    'Provide essential day-to-day IT support, ensuring smooth and uninterrupted operations.',
+                    'Actively collaborate on the execution of upcoming IT infrastructure projects.'
+                ]
+            },
+            {
+                role: 'Information Technology Coordinator',
+                company: 'The City School Official, Hyderabad',
+                period: 'Dec 2023 - Apr 2025',
+                details: [
+                    'Led a team of over 20 ICT Lab Assistants, overseeing IT operations across 18 branches.',
+                    'Administered and managed Microsoft Entra ID and Microsoft Exchange systems.',
+                    'Conducted comprehensive IT assessments and equipment validations for strategic upgrades.',
+                    'Fostered a collaborative environment, promoting knowledge sharing and proactive problem-solving.'
+                ]
+            },
+            {
+                role: 'IT Support Specialist (Freelance)',
+                company: 'Self-Employed',
+                period: '2021 - Present',
+                details: [
+                    'Delivered expert remote IT support and developed automation scripts using PowerShell, Bash, and Python.',
+                    'Independently configured Linux/Windows servers, implemented SSO, and managed VMs on AWS, Azure, and GCP.',
+                    'Managed containerization with Docker, configuration with Puppet, and web servers with Apache/Nginx.'
+                ]
+            },
+            {
+                role: 'IT Executive',
+                company: 'S. Abdullahome, Hyderabad',
+                period: 'Jul 2022 - Nov 2023',
+                details: [
+                    'Administered Windows AD.',
+                    'Managed a Hyper-V virtual infrastructure and utilized Kerio Firewall and PRTG for security.',
+                    'Ensured high server availability, robust data security, and provided efficient user support.'
+                ]
+            },
+            {
+                role: 'Information Technology Officer',
+                company: 'Chase Department Store, Hyderabad',
+                period: 'Dec 2021 - Jul 2022',
+                details: [
+                    'Played a key role in the successful IT infrastructure setup during a new store launch.',
+                    'Installed and configured over 20 POS systems, IP phones, and printers.',
+                    'Performed routine maintenance and efficiently resolved hardware and software issues.'
+                ]
+            },
+            {
+                role: 'IT Incharge',
+                company: 'Fateh Textile Mills Ltd, Hyderabad',
+                period: 'May 2020 - Dec 2021',
+                details: [
+                    'Successfully reduced internet costs by 70% through the strategic implementation of a VPN solution.',
+                    'Demonstrated initiative by automating payroll and attendance systems, improving efficiency.',
+                    'Managed a network of over 40 CCTV cameras and ensured continuous IT operations.'
+                ]
+            }
+        ];
+
+        const skillsGrid = document.getElementById('skills-grid');
+        const timelineContainer = document.getElementById('timeline-container');
+        const filterButtons = document.querySelectorAll('.skill-filter-btn');
+
+        function displaySkills(filter) {
+            skillsGrid.innerHTML = '';
+            const filteredSkills = filter === 'all' ? skillsData : skillsData.filter(skill => skill.category === filter);
+            
+            filteredSkills.forEach(skill => {
+                const skillEl = document.createElement('div');
+                skillEl.className = 'skill-card bg-white p-4 rounded-lg text-center shadow';
+                skillEl.dataset.category = skill.category;
+                skillEl.innerHTML = `<p class="font-semibold text-slate-700">${skill.name}</p>`;
+                skillsGrid.appendChild(skillEl);
+            });
+        }
+
+        function filterSkills(category) {
+            displaySkills(category);
+            filterButtons.forEach(button => {
+                const buttonCategory = button.getAttribute('onclick').split("'")[1];
+                if (buttonCategory === category) {
+                    button.classList.remove('bg-white', 'text-slate-700');
+                    button.classList.add('bg-sky-500', 'text-white');
+                } else {
+                    button.classList.remove('bg-sky-500', 'text-white');
+                    button.classList.add('bg-white', 'text-slate-700');
+                }
+            });
+        }
+        
+        function displayTimeline() {
+            experienceData.forEach((job, index) => {
+                const item = document.createElement('div');
+                item.className = 'timeline-item relative pl-8 pb-8';
+                
+                const content = `
+                    <div class="bg-white p-6 rounded-xl shadow-lg cursor-pointer" onclick="toggleDetails('details-${index}')">
+                        <p class="text-sm text-slate-500">${job.period}</p>
+                        <h3 class="text-xl font-bold text-slate-800 mt-1">${job.role}</h3>
+                        <p class="text-md text-sky-600 font-semibold">${job.company}</p>
+                        <div id="details-${index}" class="hidden mt-4 text-slate-600 space-y-2">
+                           ${job.details.map(d => `<li>${d}</li>`).join('')}
+                        </div>
+                    </div>
+                `;
+                item.innerHTML = content;
+                timelineContainer.appendChild(item);
+            });
+        }
+        
+        function toggleDetails(id) {
+            const element = document.getElementById(id);
+            element.classList.toggle('hidden');
+        }
+
+        function renderSkillsChart() {
+            const ctx = document.getElementById('skillsChart').getContext('2d');
+            const categoryCounts = skillsData.reduce((acc, skill) => {
+                acc[skill.category] = (acc[skill.category] || 0) + 1;
+                return acc;
+            }, {});
+
+            const labels = Object.keys(categoryCounts).map(cat => {
+                return cat.charAt(0).toUpperCase() + cat.slice(1);
+            });
+            const data = Object.values(categoryCounts);
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Number of Skills',
+                        data: data,
+                        backgroundColor: [
+                            'rgba(56, 189, 248, 0.6)',
+                            'rgba(14, 165, 233, 0.6)',
+                            'rgba(2, 132, 199, 0.6)',
+                            'rgba(3, 105, 161, 0.6)'
+                        ],
+                        borderColor: [
+                            'rgba(56, 189, 248, 1)',
+                            'rgba(14, 165, 233, 1)',
+                            'rgba(2, 132, 199, 1)',
+                            'rgba(3, 105, 161, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                             grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            displaySkills('all');
+            displayTimeline();
+            renderSkillsChart();
+        });
+    </script>
+</body>
+</html>
