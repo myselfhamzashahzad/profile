@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,12 +7,28 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            850: '#15202e', // Custom darker slate
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
-            color: #1e293b;
+            transition: background-color 0.3s, color 0.3s;
         }
+        /* Timeline Custom Styles */
         .timeline-item::before {
             content: '';
             position: absolute;
@@ -21,19 +37,31 @@
             width: 20px;
             height: 20px;
             border-radius: 50%;
-            background-color: #38bdf8;
-            border: 4px solid #f0f9ff;
+            background-color: #38bdf8; /* sky-400 */
+            border: 4px solid #f0f9ff; /* slate-50 */
+            transition: border-color 0.3s;
         }
+        /* Dark Mode Timeline Dot Border */
+        .dark .timeline-item::before {
+            border-color: #1e293b; /* slate-800 */
+        }
+        
         .timeline-line {
             position: absolute;
             left: -21px;
             top: 0;
             bottom: 0;
             width: 2px;
-            background-color: #e0f2fe;
+            background-color: #e0f2fe; /* sky-100 */
+            transition: background-color 0.3s;
         }
+        /* Dark Mode Timeline Line */
+        .dark .timeline-line {
+            background-color: #334155; /* slate-700 */
+        }
+
         .skill-card {
-            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.3s;
         }
         .skill-card:hover {
             transform: translateY(-5px);
@@ -61,16 +89,24 @@
         }
     </style>
 </head>
-<body class="antialiased">
+<body class="antialiased bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-100">
 
-    <header class="bg-white shadow-sm sticky top-0 z-50">
+    <header class="bg-white dark:bg-slate-800 shadow-sm sticky top-0 z-50 transition-colors duration-300">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="text-2xl font-bold text-slate-800">Hamza Shahzad</div>
-            <div class="hidden md:flex space-x-8">
-                <a href="#about" class="nav-link text-slate-600">About</a>
-                <a href="#skills" class="nav-link text-slate-600">Skills</a>
-                <a href="#experience" class="nav-link text-slate-600">Experience</a>
-                <a href="#spotlight" class="nav-link text-slate-600">Spotlight</a>
+            <div class="text-2xl font-bold text-slate-800 dark:text-white">Hamza Shahzad</div>
+            
+            <div class="flex items-center space-x-8">
+                <div class="hidden md:flex space-x-8">
+                    <a href="#about" class="nav-link text-slate-600 dark:text-slate-300">About</a>
+                    <a href="#skills" class="nav-link text-slate-600 dark:text-slate-300">Skills</a>
+                    <a href="#experience" class="nav-link text-slate-600 dark:text-slate-300">Experience</a>
+                    <a href="#spotlight" class="nav-link text-slate-600 dark:text-slate-300">Spotlight</a>
+                </div>
+                
+                <button id="theme-toggle" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 transition focus:outline-none">
+                    <span id="theme-icon-sun" class="hidden">☀️</span>
+                    <span id="theme-icon-moon">🌙</span>
+                </button>
             </div>
         </nav>
     </header>
@@ -82,45 +118,46 @@
                 <img 
                     src="https://ui-avatars.com/api/?name=Hamza+Shahzad&background=38bdf8&color=fff&size=256" 
                     alt="Hamza Shahzad" 
-                    class="rounded-full w-full h-full object-cover border-4 border-white shadow-xl"
+                    class="rounded-full w-full h-full object-cover border-4 border-white dark:border-slate-700 shadow-xl transition-colors duration-300"
                 >
             </div>
-            <h1 class="text-5xl md:text-6xl font-extrabold text-slate-900">Hamza Shahzad</h1>
-            <p class="mt-4 text-xl text-slate-500">Google Certified IT Professional | System Administrator | Tech-Savvy</p>
+
+            <h1 class="text-5xl md:text-6xl font-extrabold text-slate-900 dark:text-white">Hamza Shahzad</h1>
+            <p class="mt-4 text-xl text-slate-500 dark:text-slate-400">Google Certified IT Professional | System Administrator | Tech-Savvy</p>
             <div class="mt-8 flex justify-center space-x-4">
                 <a href="mailto:myself.hamza.shahzad@gmail.com" class="bg-sky-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-sky-600 transition">Contact Me</a>
-                <a href="https://linkedin.com/in/myselfhamza1999" target="_blank" class="bg-white text-slate-700 font-bold py-3 px-6 rounded-lg border border-slate-300 hover:bg-slate-50 transition">LinkedIn</a>
+                <a href="https://linkedin.com/in/myselfhamza1999" target="_blank" class="bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold py-3 px-6 rounded-lg border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 transition">LinkedIn</a>
             </div>
         </section>
 
         <section id="about" class="py-16">
-            <div class="max-w-3xl mx-auto bg-white p-8 rounded-xl shadow-lg">
-                <h2 class="text-3xl font-bold text-center mb-6 text-slate-800">About Me</h2>
-                <p class="text-lg text-slate-600 leading-relaxed">
+            <div class="max-w-3xl mx-auto bg-white dark:bg-slate-800 p-8 rounded-xl shadow-lg transition-colors duration-300">
+                <h2 class="text-3xl font-bold text-center mb-6 text-slate-800 dark:text-white">About Me</h2>
+                <p class="text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
                     A highly motivated and results-driven IT Professional with over five years of hands-on experience in system administration, IT support, and infrastructure management. As a proactive self-learner, I hold a Google IT Support Specialization and am adept at troubleshooting complex issues while implementing robust IT solutions. My expertise in system administration, virtualization, and scripting enables me to streamline operations and enhance organizational productivity. I am passionate about leveraging new technologies to drive efficiency and innovation, constantly seeking opportunities to expand my skills and contribute to a dynamic team.
                 </p>
             </div>
         </section>
 
-        <section id="skills" class="py-16 bg-slate-50 rounded-xl">
+        <section id="skills" class="py-16 bg-slate-100 dark:bg-slate-800/50 rounded-xl transition-colors duration-300">
             <div class="text-center mb-12">
-                <h2 class="text-4xl font-bold text-slate-800">Skills Dashboard</h2>
-                <p class="mt-2 text-slate-500">Filter by category to explore my technical skills.</p>
+                <h2 class="text-4xl font-bold text-slate-800 dark:text-white">Skills Dashboard</h2>
+                <p class="mt-2 text-slate-500 dark:text-slate-400">Filter by category to explore my technical skills.</p>
             </div>
 
             <div class="flex justify-center flex-wrap gap-2 mb-8 px-4">
                 <button onclick="filterSkills('all')" class="skill-filter-btn bg-sky-500 text-white py-2 px-4 rounded-full font-semibold">All</button>
-                <button onclick="filterSkills('technical')" class="skill-filter-btn bg-white text-slate-700 py-2 px-4 rounded-full font-semibold border border-slate-200">Technical Expertise</button>
-                <button onclick="filterSkills('scripting')" class="skill-filter-btn bg-white text-slate-700 py-2 px-4 rounded-full font-semibold border border-slate-200">AI, Scripting & Automation</button>
-                <button onclick="filterSkills('virtualization')" class="skill-filter-btn bg-white text-slate-700 py-2 px-4 rounded-full font-semibold border border-slate-200">Virtualization & Servers</button>
-                <button onclick="filterSkills('cloud')" class="skill-filter-btn bg-white text-slate-700 py-2 px-4 rounded-full font-semibold border border-slate-200">Cloud Platforms</button>
+                <button onclick="filterSkills('technical')" class="skill-filter-btn bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-200 py-2 px-4 rounded-full font-semibold border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-600">Technical Expertise</button>
+                <button onclick="filterSkills('scripting')" class="skill-filter-btn bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-200 py-2 px-4 rounded-full font-semibold border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-600">AI, Scripting & Automation</button>
+                <button onclick="filterSkills('virtualization')" class="skill-filter-btn bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-200 py-2 px-4 rounded-full font-semibold border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-600">Virtualization & Servers</button>
+                <button onclick="filterSkills('cloud')" class="skill-filter-btn bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-200 py-2 px-4 rounded-full font-semibold border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-600">Cloud Platforms</button>
             </div>
 
             <div id="skills-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 px-4">
-            </div>
+                </div>
             
             <div class="mt-16">
-                 <h3 class="text-2xl font-bold text-center mb-6 text-slate-800">Skill Distribution</h3>
+                 <h3 class="text-2xl font-bold text-center mb-6 text-slate-800 dark:text-white">Skill Distribution</h3>
                  <div class="chart-container">
                     <canvas id="skillsChart"></canvas>
                 </div>
@@ -129,34 +166,34 @@
 
         <section id="experience" class="py-20">
             <div class="text-center mb-12">
-                <h2 class="text-4xl font-bold text-slate-800">Career Timeline</h2>
-                <p class="mt-2 text-slate-500">A journey of growth and impact.</p>
+                <h2 class="text-4xl font-bold text-slate-800 dark:text-white">Career Timeline</h2>
+                <p class="mt-2 text-slate-500 dark:text-slate-400">A journey of growth and impact.</p>
             </div>
             <div id="timeline-container" class="relative max-w-2xl mx-auto">
                 <div class="timeline-line"></div>
-            </div>
+                </div>
         </section>
 
-        <section id="spotlight" class="py-16 bg-slate-50 rounded-xl">
+        <section id="spotlight" class="py-16 bg-slate-100 dark:bg-slate-800/50 rounded-xl transition-colors duration-300">
              <div class="text-center mb-12">
-                <h2 class="text-4xl font-bold text-slate-800">Spotlight</h2>
-                <p class="mt-2 text-slate-500">Key achievements and qualifications.</p>
+                <h2 class="text-4xl font-bold text-slate-800 dark:text-white">Spotlight</h2>
+                <p class="mt-2 text-slate-500 dark:text-slate-400">Key achievements and qualifications.</p>
             </div>
             <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                <div class="bg-white p-8 rounded-xl shadow-lg">
-                     <h3 class="text-2xl font-bold text-slate-800 mb-4">🏆 Winner - Pakistan's First Cybersecurity Hackathon</h3>
-                     <p class="text-slate-600">Successfully competed against 52 teams in the Karachi Region, demonstrating expertise in Network Attacks & Exploitation. This achievement highlights my passion for cybersecurity and my ability to perform under pressure.</p>
+                <div class="bg-white dark:bg-slate-800 p-8 rounded-xl shadow-lg transition-colors duration-300">
+                     <h3 class="text-2xl font-bold text-slate-800 dark:text-white mb-4">🏆 Winner - Pakistan's First Cybersecurity Hackathon</h3>
+                     <p class="text-slate-600 dark:text-slate-300">Successfully competed against 52 teams in the Karachi Region, demonstrating expertise in Network Attacks & Exploitation. This achievement highlights my passion for cybersecurity and my ability to perform under pressure.</p>
                 </div>
-                <div class="bg-white p-8 rounded-xl shadow-lg">
-                    <h3 class="text-2xl font-bold text-slate-800 mb-4">🎓 Education & Certifications</h3>
+                <div class="bg-white dark:bg-slate-800 p-8 rounded-xl shadow-lg transition-colors duration-300">
+                    <h3 class="text-2xl font-bold text-slate-800 dark:text-white mb-4">🎓 Education & Certifications</h3>
                     <div class="space-y-4">
                         <div>
-                            <p class="font-bold text-slate-700">Bachelor of Science in Computer Science (Expected 2025)</p>
-                            <p class="text-slate-500">Virtual University of Pakistan - Hyderabad, Sindh, Pakistan</p>
+                            <p class="font-bold text-slate-700 dark:text-slate-200">Bachelor of Science in Computer Science (Expected 2025)</p>
+                            <p class="text-slate-500 dark:text-slate-400">Virtual University of Pakistan - Hyderabad, Sindh, Pakistan</p>
                         </div>
                         <div>
-                            <p class="font-bold text-slate-700">Google IT Support Specialization</p>
-                            <p class="text-slate-500">Coursera/Google - 2021</p>
+                            <p class="font-bold text-slate-700 dark:text-slate-200">Google IT Support Specialization</p>
+                            <p class="text-slate-500 dark:text-slate-400">Coursera/Google - 2021</p>
                         </div>
                     </div>
                 </div>
@@ -164,12 +201,13 @@
         </section>
     </main>
 
-    <footer class="bg-slate-800 text-white text-center py-8">
-        <p>&copy; 2026 Hamza Shahzad. All Rights Reserved.</p>
+    <footer class="bg-slate-800 dark:bg-slate-950 text-white text-center py-8 transition-colors duration-300">
+        <p>&copy; 2025 Hamza Shahzad. All Rights Reserved.</p>
         <p class="text-slate-400 mt-2">Built to showcase skills and experience.</p>
     </footer>
 
     <script>
+        // --- DATA OBJECTS ---
         const skillsData = [
             { name: 'System Administration', category: 'technical' },
             { name: 'Apache Guacamole', category: 'technical' },
@@ -263,9 +301,50 @@
             }
         ];
 
+        // --- DOM ELEMENTS ---
         const skillsGrid = document.getElementById('skills-grid');
         const timelineContainer = document.getElementById('timeline-container');
         const filterButtons = document.querySelectorAll('.skill-filter-btn');
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const sunIcon = document.getElementById('theme-icon-sun');
+        const moonIcon = document.getElementById('theme-icon-moon');
+        let myChart = null; // Store chart instance
+
+        // --- DARK MODE LOGIC ---
+        function initTheme() {
+            // Check localStorage; if null, default to 'dark'
+            const userTheme = localStorage.getItem('theme');
+            const isDark = userTheme === 'dark' || (!userTheme && true); // Default true
+
+            if (isDark) {
+                document.documentElement.classList.add('dark');
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+            } else {
+                document.documentElement.classList.remove('dark');
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+            }
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            const html = document.documentElement;
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+            } else {
+                html.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+            }
+            // Re-render chart to update colors
+            renderSkillsChart();
+        });
+
+        // --- SKILLS & TIMELINE LOGIC ---
 
         function displaySkills(filter) {
             skillsGrid.innerHTML = '';
@@ -273,9 +352,10 @@
             
             filteredSkills.forEach(skill => {
                 const skillEl = document.createElement('div');
-                skillEl.className = 'skill-card bg-white p-4 rounded-lg text-center shadow';
+                // Added dark classes for cards
+                skillEl.className = 'skill-card bg-white dark:bg-slate-800 p-4 rounded-lg text-center shadow border border-transparent dark:border-slate-700';
                 skillEl.dataset.category = skill.category;
-                skillEl.innerHTML = `<p class="font-semibold text-slate-700">${skill.name}</p>`;
+                skillEl.innerHTML = `<p class="font-semibold text-slate-700 dark:text-slate-200">${skill.name}</p>`;
                 skillsGrid.appendChild(skillEl);
             });
         }
@@ -284,12 +364,16 @@
             displaySkills(category);
             filterButtons.forEach(button => {
                 const buttonCategory = button.getAttribute('onclick').split("'")[1];
+                
+                // Reset base classes for both light/dark
+                button.className = 'skill-filter-btn py-2 px-4 rounded-full font-semibold border transition-colors duration-200';
+                
                 if (buttonCategory === category) {
-                    button.classList.remove('bg-white', 'text-slate-700');
-                    button.classList.add('bg-sky-500', 'text-white');
+                    // Active State
+                    button.classList.add('bg-sky-500', 'text-white', 'border-sky-500');
                 } else {
-                    button.classList.remove('bg-sky-500', 'text-white');
-                    button.classList.add('bg-white', 'text-slate-700');
+                    // Inactive State
+                    button.classList.add('bg-white', 'dark:bg-slate-700', 'text-slate-700', 'dark:text-slate-200', 'border-slate-200', 'dark:border-slate-600', 'hover:bg-slate-50', 'dark:hover:bg-slate-600');
                 }
             });
         }
@@ -300,11 +384,11 @@
                 item.className = 'timeline-item relative pl-8 pb-8';
                 
                 const content = `
-                    <div class="bg-white p-6 rounded-xl shadow-lg cursor-pointer" onclick="toggleDetails('details-${index}')">
-                        <p class="text-sm text-slate-500">${job.period}</p>
-                        <h3 class="text-xl font-bold text-slate-800 mt-1">${job.role}</h3>
-                        <p class="text-md text-sky-600 font-semibold">${job.company}</p>
-                        <div id="details-${index}" class="hidden mt-4 text-slate-600 space-y-2">
+                    <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg cursor-pointer border border-transparent dark:border-slate-700 transition-colors duration-300" onclick="toggleDetails('details-${index}')">
+                        <p class="text-sm text-slate-500 dark:text-slate-400">${job.period}</p>
+                        <h3 class="text-xl font-bold text-slate-800 dark:text-white mt-1">${job.role}</h3>
+                        <p class="text-md text-sky-600 dark:text-sky-400 font-semibold">${job.company}</p>
+                        <div id="details-${index}" class="hidden mt-4 text-slate-600 dark:text-slate-300 space-y-2 text-sm leading-relaxed">
                            ${job.details.map(d => `<li>${d}</li>`).join('')}
                         </div>
                     </div>
@@ -331,7 +415,15 @@
             });
             const data = Object.values(categoryCounts);
 
-            new Chart(ctx, {
+            // Detect current theme for chart colors
+            const isDark = document.documentElement.classList.contains('dark');
+            const textColor = isDark ? '#e2e8f0' : '#334155'; // slate-200 vs slate-700
+
+            if (myChart) {
+                myChart.destroy();
+            }
+
+            myChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: labels,
@@ -365,11 +457,17 @@
                     scales: {
                         x: {
                             beginAtZero: true,
+                            ticks: {
+                                color: textColor
+                            },
                             grid: {
                                 display: false
                             }
                         },
                         y: {
+                             ticks: {
+                                color: textColor
+                            },
                              grid: {
                                 display: false
                             }
@@ -379,7 +477,9 @@
             });
         }
 
+        // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
+            initTheme();
             displaySkills('all');
             displayTimeline();
             renderSkillsChart();
